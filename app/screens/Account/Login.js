@@ -12,7 +12,7 @@ export default function Login() {
         style={styles.logo}
       />
       <View style={styles.viewContainer}>
-        <Text>Login Form....</Text>
+        {/* <Text>Login Form....</Text> */}
         <CreateAccount />
       </View>
       <Divider style={styles.divider} />
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     marginLeft: 40,
   },
   textRegister: {
+    textAlign: "center",
     marginTop: 15,
     marginLeft: 10,
     marginRight: 10,

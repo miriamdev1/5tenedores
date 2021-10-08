@@ -1,15 +1,41 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
+import { validateEmail } from "../../utils/validation";
+import { size, isEmpty } from "lodash";
 
-export default function RegisterForm() {
+export default function RegisterForm(props) {
+  //console.log(props);
+  const { toastRef } = props;
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   const [formData, setFormData] = useState(defaultFormValue());
 
   const onSubmit = () => {
-    console.log(formData);
+    if (
+      isEmpty(formData.email) ||
+      isEmpty(formData.password) ||
+      isEmpty(formData.repeatPassword)
+    ) {
+      // console.log("Todos los campos son obligatorios");
+      toastRef.current.show("Todos los campos son obligatorios");
+    } else if (!validateEmail(formData.email)) {
+      // console.log("El email no es correcto");
+      toastRef.current.show("El email no es correcto");
+    } else if (formData.password !== formData.repeatPassword) {
+      // console.log("Las password deben ser iguales");
+      toastRef.current.show("Las password deben ser iguales");
+    } else if (size(formData.password) < 6) {
+      // console.log("La password tiene que tener al menos 6 caracteres");
+      toastRef.current.show(
+        "La password tiene que tener al menos 6 caracteres"
+      );
+    } else {
+      console.log("Ok");
+    }
+
+    // console.log(validateEmail(formData.email));
   };
 
   //onChange recibe el evento que se este modificando(email, pass,etc)

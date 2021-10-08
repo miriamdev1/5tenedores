@@ -46,10 +46,10 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   title: {
+    textAlign: "center",
     fontWeight: "bold",
     fontSize: 19,
     marginBottom: 10,
-    textAlign: "center,",
   },
   description: {
     textAlign: "center",
