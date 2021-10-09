@@ -1,16 +1,25 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
+import Loading from "../Loading";
 import { validateEmail } from "../../utils/validation";
 import { size, isEmpty } from "lodash";
+import firebase from "firebase/app";
+//import * as firebase from "firebase";
+import { useNavigation } from "@react-navigation/native";
 
 export default function RegisterForm(props) {
   //console.log(props);
   const { toastRef } = props;
+
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   const [formData, setFormData] = useState(defaultFormValue());
+
+  const [loading, setLoading] = useState(false);
+
+  const navigation = useNavigation;
 
   const onSubmit = () => {
     if (
@@ -32,7 +41,20 @@ export default function RegisterForm(props) {
         "La password tiene que tener al menos 6 caracteres"
       );
     } else {
-      console.log("Ok");
+      setLoading(true);
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(formData.email, formData.password)
+        .then((response) => {
+          setLoading(false);
+          navigation.navigate("account");
+          //console.log(err);
+        })
+        .catch(() => {
+          toastRef.current.show("El email ya esta en uso, pruebe con otro");
+          // console.log(err);
+        });
+      // console.log("Ok");
     }
 
     // console.log(validateEmail(formData.email));
@@ -96,6 +118,7 @@ export default function RegisterForm(props) {
         buttonStyle={styles.btnRegister}
         onPress={onSubmit}
       />
+      <Loading isVisible={loading} text="Creando cuenta" />
     </View>
   );
 }
